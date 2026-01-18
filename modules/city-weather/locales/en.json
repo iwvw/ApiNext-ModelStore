@@ -1,0 +1,15 @@
+{
+    "title": "City Weather",
+    "placeholder": "Enter city name (e.g. shanghai, new york)...",
+    "search": "Search",
+    "auto_locate": "Auto Locate",
+    "loading": "Loading weather data...",
+    "error_prefix": "⚠️ Error: ",
+    "error_not_found": "City not found or no data available",
+    "error_geo_unsupported": "Your browser does not support Geolocation",
+    "error_geo_failed": "Location failed: ",
+    "warn_geo_city_parse": "Located, but failed to parse city name. Defaulting to Beijing.",
+    "wind_status": "Wind Status",
+    "forecast": "Forecast",
+    "day": "Day {day}"
+}

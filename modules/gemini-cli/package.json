@@ -1,0 +1,25 @@
+{
+    "name": "gemini-cli",
+    "version": "1.2.4",
+    "description": "Google Gemini 模型适配器 (MVP)",
+    "main": "server/index.js",
+    "aidev": {
+        "icon": "Cpu",
+        "ui": {
+            "entry": "client/index.js",
+            "icon": "Settings",
+            "keywords": [
+                "gemini",
+                "cli"
+            ],
+            "sidebar": {
+                "label": {
+                    "zh": "Gemini 适配器",
+                    "en": "Gemini Adapter"
+                },
+                "href": "/admin/modules/gemini-cli",
+                "icon": "Cpu"
+            }
+        }
+    }
+}

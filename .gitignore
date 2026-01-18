@@ -1,0 +1,8 @@
+
+node_modules/
+dist/
+.DS_Store
+# User Data
+**/data/accounts.json
+**/data/logs.json
+**/data/history.json

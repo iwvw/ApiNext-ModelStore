@@ -1,0 +1,15 @@
+{
+    "title": "城市天气查询",
+    "placeholder": "输入城市拼音 (如: shanghai, beijing, tokyo)...",
+    "search": "查询",
+    "auto_locate": "自动定位",
+    "loading": "正在加载气象数据...",
+    "error_prefix": "⚠️ 查询失败: ",
+    "error_not_found": "未找到该城市或暂无数据",
+    "error_geo_unsupported": "您的浏览器不支持地理位置定位",
+    "error_geo_failed": "无法获取位置: ",
+    "warn_geo_city_parse": "定位成功，但无法解析城市名称，将默认查询北京。",
+    "wind_status": "风力状况",
+    "forecast": "未来预报",
+    "day": "第 {day} 天"
+}

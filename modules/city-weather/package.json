@@ -1,0 +1,19 @@
+{
+    "name": "city-weather",
+    "version": "2.0.0",
+    "description": "全球城市天气查询与自动定位预览",
+    "main": "server/index.js",
+    "aidev": {
+        "ui": {
+            "entry": "client/index.js",
+            "sidebar": {
+                "label": {
+                    "zh": "城市天气",
+                    "en": "City Weather"
+                },
+                "href": "/admin/modules/city-weather",
+                "icon": "CloudRain"
+            }
+        }
+    }
+}
