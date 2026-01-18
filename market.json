@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-01-18T16:33:32.662Z",
+  "modules": [
+    {
+      "name": "city-weather",
+      "version": "2.0.0",
+      "title": {
+        "zh": "城市天气",
+        "en": "City Weather"
+      },
+      "description": {
+        "en": "全球城市天气查询与自动定位预览"
+      },
+      "icon": "Package",
+      "downloadUrl": "https://raw.githubusercontent.com/iwvw/ApiNext-ModelStore/gh-pages/modules/city-weather.zip",
+      "author": "Community",
+      "minAppVersion": "0.1.0"
+    },
+    {
+      "name": "gemini-cli",
+      "version": "1.2.4",
+      "title": {
+        "zh": "Gemini 适配器",
+        "en": "Gemini Adapter"
+      },
+      "description": {
+        "en": "Google Gemini 模型适配器 (MVP)"
+      },
+      "icon": "Settings",
+      "downloadUrl": "https://raw.githubusercontent.com/iwvw/ApiNext-ModelStore/gh-pages/modules/gemini-cli.zip",
+      "author": "Community",
+      "minAppVersion": "0.1.0"
+    }
+  ]
+}
