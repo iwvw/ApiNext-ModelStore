@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApiNext Module Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-50 min-h-screen">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-950/50 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="h-10 w-10 bg-indigo-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                </div>
+                <div>
+                    <h1 class="font-bold text-xl tracking-tight">ApiNext Store</h1>
+                    <p class="text-xs text-slate-400">Official Community Modules</p>
+                </div>
+            </div>
+            <button onclick="copySourceUrl()" class="group flex items-center gap-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 px-4 py-2 rounded-full transition-all text-sm font-medium">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                <span id="btn-text">Copy Repository URL</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto px-6 py-12">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400 mb-4">
+                Discover Extensions
+            </h2>
+            <p class="text-slate-400 max-w-lg mx-auto text-lg">
+                Enhance your ApiNext instance with community-driven modules. 
+                Simply add this repository source to your admin panel.
+            </p>
+        </div>
+
+        <div id="module-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Loading State -->
+            <div class="col-span-full text-center py-20 text-slate-500 animate-pulse">
+                Loading marketplace data...
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-12 mt-12 bg-slate-900/50">
+        <div class="max-w-5xl mx-auto px-6 text-center text-slate-500 text-sm">
+            <p>&copy; 2026 ApiNext Community. Open Source Software.</p>
+        </div>
+    </footer>
+
+    <script>
+        const REPO_URL = window.location.href.replace(/\/$/, '') + '/market.json';
+        
+        async function loadMarket() {
+            try {
+                const res = await fetch('./market.json');
+                if (!res.ok) throw new Error('Failed to load market index');
+                const data = await res.json();
+                renderModules(data.modules);
+            } catch (e) {
+                document.getElementById('module-grid').innerHTML = `
+                    <div class="col-span-full text-center py-20 text-red-400 bg-red-950/20 rounded-xl border border-red-900/50">
+                        <p class="font-bold">Failed to load modules</p>
+                        <p class="text-sm mt-2 opacity-80">${e.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderModules(modules) {
+            const container = document.getElementById('module-grid');
+            container.innerHTML = modules.map(m => `
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-indigo-500/50 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all group">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="h-12 w-12 bg-slate-800 rounded-lg flex items-center justify-center text-slate-300 group-hover:text-indigo-400 transition-colors">
+                            <i data-lucide="${m.icon || 'package'}" class="w-6 h-6"></i>
+                        </div>
+                        <span class="bg-slate-800 text-slate-400 text-xs font-mono px-2 py-1 rounded">v${m.version}</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-white group-hover:text-indigo-300 transition-colors">
+                        ${m.title?.en || m.name}
+                    </h3>
+                    <p class="text-slate-400 text-sm mb-6 line-clamp-2 h-10">
+                        ${m.description?.en || 'No description provided.'}
+                    </p>
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-800">
+                        <div class="flex items-center gap-2 text-xs text-slate-500">
+                            <span>by ${m.author || 'Unknown'}</span>
+                        </div>
+                        <a href="${m.downloadUrl}" class="flex items-center gap-2 text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
+                            <span>Download ZIP</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Simple icon rendering placeholder as we don't load lucide library fully here
+            // Just replacing with SVG for simplicity or leave as is if script loaded
+            // Let's inject pure SVGs for standard icons to be safe
+            lucide.createIcons();
+        }
+
+        function copySourceUrl() {
+            navigator.clipboard.writeText(REPO_URL).then(() => {
+                const btn = document.getElementById('btn-text');
+                const original = btn.innerText;
+                btn.innerText = 'Copied!';
+                setTimeout(() => btn.innerText = original, 2000);
+            });
+        }
+
+        // Initialize
+        loadMarket();
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</body>
+</html>

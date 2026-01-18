@@ -19,6 +19,14 @@ if (fs.existsSync(DIST_DIR)) {
 }
 fs.mkdirSync(DIST_MODULES_DIR, { recursive: true });
 
+// Copy Template
+const TEMPLATE_FILE = path.join(__dirname, '../templates/index.html');
+const DIST_INDEX = path.join(DIST_DIR, 'index.html');
+if (fs.existsSync(TEMPLATE_FILE)) {
+    fs.copyFileSync(TEMPLATE_FILE, DIST_INDEX);
+    console.log('Copied index.html template.');
+}
+
 const modules = [];
 
 const items = fs.readdirSync(MODULES_DIR);
