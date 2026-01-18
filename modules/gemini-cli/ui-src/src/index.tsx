@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-// We rely on LucideIcons being injected globally or via require ('lucide-react') shim
-// In our ModuleFrame, it is passed as a global or require mock.
-// Since we set external: ['lucide-react'] in vite, we import normally and expect the runtime to provide it.
-// ... (imports remain)
 import {
     Server, Activity, Terminal, Shield, Plus, Trash2, Edit2,
     RotateCcw, CheckCircle, XCircle, Upload
 } from 'lucide-react';
+
+// Use host shared components
+const { Button } = require("@/components/ui/button");
+const { Input } = require("@/components/ui/input");
+const { Card, CardHeader, CardTitle, CardContent, CardDescription } = require("@/components/ui/card");
+const { Badge } = require("@/components/ui/badge");
+const { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } = require("@/components/ui/table");
 
 
 // Types
@@ -33,22 +36,24 @@ interface LogEntry {
 const StatusCard = ({ title, value, sub, icon: Icon, color = "text-primary" }: any) => {
     if (!Icon) return null;
     return (
-        <div className="p-4 rounded-xl border bg-card text-card-foreground shadow-sm flex items-center gap-4">
-            <div className={`p-3 rounded-lg bg-muted ${color}`}>
-                <Icon className="w-6 h-6" />
-            </div>
-            <div>
-                <p className="text-sm font-medium text-muted-foreground">{title}</p>
-                <h3 className="text-2xl font-bold">{value}</h3>
-                {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
-            </div>
-        </div>
+        <Card className="flex items-center gap-4">
+            <CardContent className="p-4 flex items-center gap-4 w-full">
+                <div className={`p-3 rounded-lg bg-muted ${color}`}>
+                    <Icon className="w-6 h-6" />
+                </div>
+                <div>
+                    <p className="text-sm font-medium text-muted-foreground">{title}</p>
+                    <h3 className="text-2xl font-bold">{value}</h3>
+                    {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
+                </div>
+            </CardContent>
+        </Card>
     );
 };
 
 const LogsPanel = ({ logs }: { logs: LogEntry[] }) => (
-    <div className="flex flex-col h-full overflow-hidden bg-zinc-950 text-zinc-300 font-mono text-sm rounded-lg border border-zinc-800">
-        <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-800 bg-zinc-900">
+    <Card className="flex flex-col h-full overflow-hidden border-zinc-800">
+        <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-800 bg-zinc-900/50">
             <span className="font-semibold flex items-center gap-2">
                 <Terminal className="w-4 h-4" /> 实时日志
             </span>
@@ -85,7 +90,7 @@ const LogsPanel = ({ logs }: { logs: LogEntry[] }) => (
                 <div className="text-zinc-600 text-center py-10 italic">等待请求中...</div>
             )}
         </div>
-    </div>
+    </Card>
 );
 
 const AccountsPanel = ({ accounts, onUpdate, onRefresh }: { accounts: Account[], onUpdate: (accs: Account[]) => void, onRefresh: () => void }) => {
@@ -141,17 +146,17 @@ const AccountsPanel = ({ accounts, onUpdate, onRefresh }: { accounts: Account[],
 
             <div className="flex items-center justify-between">
                 <div className="flex gap-2">
-                    <button onClick={onRefresh} className="p-2 hover:bg-muted rounded-md transition-colors" title="刷新">
+                    <Button variant="ghost" size="icon" onClick={onRefresh} title="刷新">
                         <RotateCcw className="w-4 h-4" />
-                    </button>
+                    </Button>
                     <h3 className="font-semibold text-lg">账号列表</h3>
                 </div>
                 <div className="flex gap-2">
-                    <button
+                    <Button
                         onClick={() => setShowImport(!showImport)}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-primary text-primary-foreground text-sm rounded-md shadow hover:bg-primary/90 transition-colors">
+                        className="flex items-center gap-2">
                         <Plus className="w-4 h-4" /> 导入 / 添加
-                    </button>
+                    </Button>
                 </div>
             </div>
 
@@ -181,68 +186,74 @@ const AccountsPanel = ({ accounts, onUpdate, onRefresh }: { accounts: Account[],
                         onChange={e => setJsonText(e.target.value)}
                     />
                     <div className="flex justify-end gap-2">
-                        <button onClick={() => setShowImport(false)} className="px-3 py-1 text-sm bg-background border rounded hover:bg-muted">取消</button>
-                        <button onClick={handleImport} className="px-3 py-1 bg-primary text-primary-foreground text-sm rounded shadow hover:bg-primary/90">保存并覆盖</button>
+                        <Button variant="outline" size="sm" onClick={() => setShowImport(false)}>取消</Button>
+                        <Button size="sm" onClick={handleImport}>保存并覆盖</Button>
                     </div>
                 </div>
             )}
 
-            <div className="border rounded-lg overflow-hidden">
-                <table className="w-full text-sm">
-                    <thead className="bg-muted/50 border-b">
-                        <tr className="text-left text-muted-foreground">
-                            <th className="p-3 font-medium">状态</th>
-                            <th className="p-3 font-medium">名称</th>
-                            <th className="p-3 font-medium">Project ID</th>
-                            <th className="p-3 font-medium">最后使用</th>
-                            <th className="p-3 font-medium text-right">操作</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y">
+            <Card>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="w-[80px]">状态</TableHead>
+                            <TableHead>名称</TableHead>
+                            <TableHead>Project ID</TableHead>
+                            <TableHead>最后使用</TableHead>
+                            <TableHead className="text-right">操作</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
                         {accounts.map(acc => (
-                            <tr key={acc.id} className="hover:bg-muted/20 transition-colors">
-                                <td className="p-3">
+                            <TableRow key={acc.id} className="group">
+                                <TableCell>
                                     {acc.is_active
-                                        ? <CheckCircle className="w-4 h-4 text-green-500" />
-                                        : <XCircle className="w-4 h-4 text-zinc-400" />
+                                        ? <Badge variant="default" className="bg-green-500/10 text-green-500 border-green-500/20 hover:bg-green-500/20">活跃</Badge>
+                                        : <Badge variant="secondary">离线</Badge>
                                     }
-                                </td>
-                                <td className="p-3 font-medium">{acc.name}</td>
-                                <td className="p-3 font-mono text-xs text-muted-foreground">{acc.project_id || "等待中..."}</td>
-                                <td className="p-3 text-xs text-muted-foreground">
+                                </TableCell>
+                                <TableCell className="font-medium">{acc.name}</TableCell>
+                                <TableCell className="font-mono text-xs text-muted-foreground">{acc.project_id || "等待中..."}</TableCell>
+                                <TableCell className="text-xs text-muted-foreground">
                                     {acc.last_used_at ? new Date(acc.last_used_at).toLocaleTimeString() : "-"}
-                                </td>
-                                <td className="p-3 text-right flex justify-end gap-2 text-muted-foreground">
-                                    <button
-                                        type="button"
-                                        title="编辑"
-                                        className="hover:text-primary p-1 cursor-pointer"
-                                        onClick={() => alert('暂未实现编辑功能')}
-                                    >
-                                        <Edit2 className="w-3.5 h-3.5" />
-                                    </button>
-                                    <button
-                                        type="button"
-                                        title="删除"
-                                        className="hover:text-destructive p-1 cursor-pointer"
-                                        onClick={() => {
-                                            if (confirm(`确认删除账号 ${acc.name}?`)) {
-                                                const newAccs = accounts.filter(a => a.id !== acc.id);
-                                                onUpdate(newAccs);
-                                            }
-                                        }}
-                                    >
-                                        <Trash2 className="w-3.5 h-3.5" />
-                                    </button>
-                                </td>
-                            </tr>
+                                </TableCell>
+                                <TableCell className="text-right">
+                                    <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-8 w-8"
+                                            onClick={() => alert('暂未实现编辑功能')}
+                                        >
+                                            <Edit2 className="w-3.5 h-3.5" />
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                                            onClick={() => {
+                                                if (confirm(`确认删除账号 ${acc.name}?`)) {
+                                                    const newAccs = accounts.filter(a => a.id !== acc.id);
+                                                    onUpdate(newAccs);
+                                                }
+                                            }}
+                                        >
+                                            <Trash2 className="w-3.5 h-3.5" />
+                                        </Button>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
                         ))}
                         {accounts.length === 0 && (
-                            <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">暂无配置账号</td></tr>
+                            <TableRow>
+                                <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
+                                    暂无配置账号
+                                </TableCell>
+                            </TableRow>
                         )}
-                    </tbody>
-                </table>
-            </div>
+                    </TableBody>
+                </Table>
+            </Card>
         </div>
     );
 };
@@ -315,17 +326,19 @@ export default function GeminiCliApp({ locale: _locale }: { locale: string }) {
                     <h2 className="text-2xl font-bold tracking-tight">Gemini CLI 管理器</h2>
                     <p className="text-muted-foreground">管理多账号轮询与内部 API 网关设置。</p>
                 </div>
-                <div className="flex gap-2">
-                    <button
+                <div className="flex bg-muted/50 p-1 rounded-full border">
+                    <Button
+                        variant={activeTab === 'accounts' ? 'default' : 'ghost'}
                         onClick={() => setActiveTab('accounts')}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'accounts' ? 'bg-primary text-primary-foreground shadow' : 'hover:bg-muted'}`}>
+                        className="rounded-full shadow-none">
                         账号管理
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                        variant={activeTab === 'logs' ? 'default' : 'ghost'}
                         onClick={() => setActiveTab('logs')}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'logs' ? 'bg-primary text-primary-foreground shadow' : 'hover:bg-muted'}`}>
+                        className="rounded-full shadow-none">
                         实时日志
-                    </button>
+                    </Button>
                 </div>
             </div>
 

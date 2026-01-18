@@ -12,7 +12,17 @@ export default defineConfig({
             formats: ['cjs']
         },
         rollupOptions: {
-            external: ['react', 'react-dom', 'lucide-react', 'react/jsx-runtime'],
+            external: [
+                'react',
+                'react-dom',
+                'lucide-react',
+                'react/jsx-runtime',
+                '@/components/ui/button',
+                '@/components/ui/input',
+                '@/components/ui/card',
+                '@/components/ui/badge',
+                '@/components/ui/table'
+            ],
             output: {
                 globals: {
                     react: 'React',
